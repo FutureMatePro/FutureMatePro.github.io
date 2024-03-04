@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vue3 Vite TS Demo</title>
     <style>
@@ -25,6 +26,63 @@
           s = o.documentElement;
         n(), d.addEventListener("resize", function() { clearTimeout(i), i = setTimeout(n, 300) }, !1), d.addEventListener("pageshow", function(e) { e.persisted && (clearTimeout(i), i = setTimeout(n, 300)) }, !1), d.addEventListener("DOMContentLoaded", function() { o.body.style.position = "relative", o.body.style.fontSize = "16px", o.body.style.margin = "0 auto", o.body.style.maxWidth = t + "px" }, !1)
       }(720, 640);
+
+      $(function() {
+            //创建分享
+          function funcShare() {
+              $.ajax({
+                  async: false,
+                  url: "../ShareHandler.ashx",
+                  data: {
+                      dataurl: location.href.split("#")[0]
+                  },
+                  success: function(res) {
+                      var json = eval("(" + res + ")");
+                      console.log(json);
+                      var jsApiList = ["onMenuShareTimeline", "onMenuShareAppMessage", "onMenuShareQQ",
+                          "onMenuShareWeibo", "onMenuShareQZone"
+                      ];
+                      wx.config({
+                          debug: false,
+                          appId: json.wxappid,
+                          timestamp: json.timestamp,
+                          nonceStr: json.noncestr,
+                          signature: json.strSige,
+                          jsApiList: jsApiList
+                      });
+                  }
+              });
+          }
+          //签名完成
+          wx.ready(function() {
+
+              // console.log("验证完成！！！");
+
+              //分享的头部标题
+              var title = "标题hhh";
+              //分享的内容
+              var desc = "baidu.com";
+              var link = location.href.split("#")[0];
+              //分享要显示的右下角小图片
+              var imgUrl = "http://www.to-morrow.com/attractInvestment/img/logo.png";
+
+              //朋友圈
+              wx.onMenuShareTimeline({
+                  title: title,
+                  link: link,
+                  imgUrl: imgUrl
+              });
+
+              //朋友
+              wx.onMenuShareAppMessage({
+                  title: title,
+                  desc: desc,
+                  link: link,
+                  imgUrl: imgUrl
+              });
+          });
+          funcShare();
+      })
     </script>
     <script type="module" crossorigin src="./assets/index-e96c2369.js"></script>
     <link rel="stylesheet" href="./assets/index-d75a85b1.css">
